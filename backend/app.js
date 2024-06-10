@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const app = express()
 const logger = require('morgan');
 const cors = require("cors");
-const port = 3000
+const port = 5432;
 const db = require('./queries')
 const Pool = require('pg').Pool;
 require('dotenv').config();
