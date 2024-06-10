@@ -1,2 +1,2 @@
-const API_ENDPOINT = "http://localhost:3000";
+const API_ENDPOINT = "https://gossipmessagingapp.onrender.com";
 export default API_ENDPOINT;
