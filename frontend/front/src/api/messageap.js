@@ -1,30 +1,33 @@
 import React, { useContext, useState, useEffect } from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
-import { useNavigate } from 'react-router-dom';
 import { rid } from './searchus.js';
 import './searchus.css';
 
 function Message() {
-  const [messages, setMessages] = useState([]);
+  let [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
-  const [selectedUserId, setSelectedUserId] = useState(0);
+
   const { username } = useContext(UserContext);
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (senderId && rid) {
+      fetchMessages();
+    }
+  }, [senderId,rid]);
 
   useEffect(() => {
     if (username) {
       fetchUserId();
     }
   }, [username]);
-  
   useEffect(() => {
     if (senderId && rid) {
       fetchMessages();
     }
-  }, [senderId, rid]);
+  }, [messages]);
+
   
   const fetchMessages = async () => {
     try {
@@ -33,7 +36,8 @@ function Message() {
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
      console.log(data);
-      setMessages(data.messages);
+     setMessages(data.messages);
+      messages=data.messages;
     } catch (error) {
      // console.error('Error fetching messages:', error);
       setError(error.message);
@@ -75,8 +79,9 @@ function Message() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      setNewMessage('');
       fetchMessages();
+      setNewMessage('');
+      
     } catch (error) {
       console.error('Error sending message:', error);
       setError(error.message);
