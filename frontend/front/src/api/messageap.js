@@ -32,7 +32,7 @@ function Message() {
       //console.log(rid);
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
-     // console.log(data);
+     console.log(data);
       setMessages(data.messages);
     } catch (error) {
      // console.error('Error fetching messages:', error);

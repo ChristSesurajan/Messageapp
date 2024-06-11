@@ -59,11 +59,6 @@ app.get('/messages', async (req, res) => {
         'SELECT * FROM messages WHERE (sender_id = $1 AND recipient_id = $2) OR (sender_id = $2 AND recipient_id = $1)',
         [sender_id, recipient_id]
       );
-  
-      if (rows.length === 0) {
-        return res.status(404).json({ success: false, message: 'No messages found' });
-      }
-  
       res.status(200).json({ success: true, messages: rows });
     } catch (error) {
       console.error('Database error:', error);
