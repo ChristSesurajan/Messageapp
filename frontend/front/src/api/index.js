@@ -1,2 +1,2 @@
-const API_ENDPOINT = "https://gossipmessagingapp.onrender.com";
+const API_ENDPOINT = "https://gossipapp-hcjb.onrender.com";
 export default API_ENDPOINT;
