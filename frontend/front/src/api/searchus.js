@@ -15,7 +15,7 @@ const [recid, setRecid] = useState(null);
     try {
       const response = await fetch(`${API_ENDPOINT}/search?name=${searchTerm}`);
       if (!response.ok) {
-        throw new Error('Failed to search users');
+        throw new Error('users is not found');
       }
       const data = await response.json();
      // console.log(data)
