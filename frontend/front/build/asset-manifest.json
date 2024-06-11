@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.46e3c361.css",
+    "main.js": "/static/js/main.83a4b700.js",
+    "static/js/453.80efc53e.chunk.js": "/static/js/453.80efc53e.chunk.js",
+    "static/media/gosip.jpg": "/static/media/gosip.fecd4bf8ad456c2b74c9.jpg",
+    "index.html": "/index.html",
+    "main.46e3c361.css.map": "/static/css/main.46e3c361.css.map",
+    "main.83a4b700.js.map": "/static/js/main.83a4b700.js.map",
+    "453.80efc53e.chunk.js.map": "/static/js/453.80efc53e.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.46e3c361.css",
+    "static/js/main.83a4b700.js"
+  ]
+}
