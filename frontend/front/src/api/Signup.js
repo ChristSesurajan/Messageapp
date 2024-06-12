@@ -67,7 +67,8 @@ function Signup() {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            minlength="8"  
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={(e) => setPassword(e.target.value)}
           required/>
         </div>
         <div>
