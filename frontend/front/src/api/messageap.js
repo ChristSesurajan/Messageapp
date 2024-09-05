@@ -108,7 +108,7 @@ function Message() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      fetchMessages();
+      //fetchMessages();
       setNewMessage('');
       
     } catch (error) {
