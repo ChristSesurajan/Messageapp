@@ -45,7 +45,7 @@ app.use(
   });
 
 
-
+app.get('/profile', db.getAllUser)
   
 app.get('/profile/:username', db.getUserByName)
 app.post('/signup', db.createUser)

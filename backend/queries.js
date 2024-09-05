@@ -90,6 +90,22 @@ const updateUser = (request, response) => {
     }
   )
 }
+const getAllUser = (request, response) => {
+  pool.query('SELECT id ,name,email,username FROM users', (error, results) => {
+    if (error) {
+      console.error('Database error:', error);
+      response.status(500).json({ success: false, message: 'Internal server error' });
+      return;
+    }
+
+    if (results.rows.length === 0) {
+      response.status(404).json({ success: false, message: 'User not found' });
+      return;
+    }
+
+    response.status(200).json({ success: true, user: results.rows});
+  });
+}
 
 const deleteUser = (request, response) => {
   const id = parseInt(request.params.id)
@@ -107,5 +123,6 @@ module.exports = {
   getUserByName,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getAllUser
 }
