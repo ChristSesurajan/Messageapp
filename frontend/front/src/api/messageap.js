@@ -119,33 +119,34 @@ function Message() {
 
   return (
     <div className="messaging-app-container">
-      <h1 className="app-title">Messaging App</h1>
-      {error && <div className="error">{error}</div>}
-      <div className="message-input-container">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className="message-input"
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMessage} className="send-button">
-          Send
-        </button>
-      </div>
-      <div className="message-list">
-        <ul>
-          {[...messages].reverse().map((message, index) => (
-            <li
-              key={index}
-              className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
-            >
-              {message.message}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <h1 className="app-title">Messaging App</h1>
+    {error && <div className="error">{error}</div>}
+   
+    <div className="message-list">
+      <ul>
+        {[...messages].map((message, index) => (
+          <li
+            key={index}
+            className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
+          >
+            {message.message}
+          </li>
+        ))}
+      </ul>
     </div>
+    <div className="message-input-container">
+      <input
+        type="text"
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        className="message-input"
+        placeholder="Type a message..."
+      />
+      <button onClick={sendMessage} className="send-button">
+        Send
+      </button>
+    </div>
+  </div>
   );
 }
 

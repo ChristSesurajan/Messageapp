@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API_ENDPOINT from './../api/index.js';
+import Preloader from '../components/preloader.js';
 
 function Signup() {
   const [username, setUsername] = useState('');
@@ -9,11 +10,13 @@ function Signup() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       const response = await fetch(`${API_ENDPOINT}/signup`, {
         method: 'POST',
         headers: {
@@ -34,8 +37,13 @@ function Signup() {
     } catch (error) {
       setError('An error occurred. Please try again later.');
       setSuccess('');
+    }finally {
+      setLoading(false); 
     }
   };
+  if(loading){
+    <Preloader></Preloader>
+  }
 
   return (
     <div>
@@ -67,8 +75,7 @@ function Signup() {
             type="password"
             id="password"
             value={password}
-            minlength="8"  
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           required/>
         </div>
         <div>
@@ -77,7 +84,6 @@ function Signup() {
             type="email"
             id="email"
             value={email}
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
             onChange={(e) => setEmail(e.target.value)}
             required/>
         </div>
