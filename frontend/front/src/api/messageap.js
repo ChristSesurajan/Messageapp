@@ -13,6 +13,20 @@ function Message() {
   const { username } = useContext(UserContext);
   useEffect(() => {
     if (senderId && rid) {
+      const fetchMessages = async () => {
+        try {
+         // console.log(senderId);
+          //console.log(rid);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const data = await response.json();
+         console.log(data);
+         setMessages(data.messages);
+          messages=data.messages;
+        } catch (error) {
+         // console.error('Error fetching messages:', error);
+          setError(error.message);
+        }
+      };
       fetchMessages();
     }
   }, [senderId,rid]);
@@ -24,12 +38,27 @@ function Message() {
   }, [username]);
   useEffect(() => {
     if (senderId && rid) {
+      const fetchMessages = async () => {
+        try {
+         // console.log(senderId);
+          //console.log(rid);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const data = await response.json();
+         console.log(data);
+         setMessages(data.messages);
+          messages=data.messages;
+        } catch (error) {
+         // console.error('Error fetching messages:', error);
+          setError(error.message);
+        }
+      };
       fetchMessages();
     }
-  }, [messages]);
+
+  }, [newMessage]);
 
   
-  const fetchMessages = async () => {
+  /*const fetchMessages = async () => {
     try {
      // console.log(senderId);
       //console.log(rid);
@@ -42,7 +71,7 @@ function Message() {
      // console.error('Error fetching messages:', error);
       setError(error.message);
     }
-  };
+  };*/
   
   const fetchUserId = async () => {
     try {
