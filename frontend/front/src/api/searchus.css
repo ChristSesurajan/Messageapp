@@ -62,6 +62,7 @@
 }
 
 .message.received {
+  float:right;
   background-color: #eaeaea;
 }
 @keyframes fadeIn {
