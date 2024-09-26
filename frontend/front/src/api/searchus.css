@@ -44,6 +44,8 @@
 }
 
 .message-list ul {
+  display: flex;
+  flex-direction: column;
   list-style: none;
   padding: 0;
 }
@@ -59,12 +61,13 @@
 .message.sent {
   background-color: #dcf8c6;
   margin-bottom: 10px;
-  align-self: flex-end;
+  align-self: flex-start;
 }
 
 .message.received {
-  align-self: flex-start;
   background-color: #eaeaea;
+  margin-bottom: 10px;
+  align-self: flex-end;
 }
 @keyframes fadeIn {
   from {
