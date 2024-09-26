@@ -4,16 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import './login.css'
-
+import Preloader from '../components/preloader.js';
 function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { username, setUsername } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true)
       const response = await fetch(`${API_ENDPOINT}`, {
         method: 'POST',
         headers: {
@@ -31,8 +33,13 @@ function Login() {
       }
     } catch (error) {
       setError('An error occurred. Please try again later.');
+    }finally {
+      setLoading(false); 
     }
   };
+  if (loading) {
+    return <Preloader />; 
+  }
 
   return (
     <div>

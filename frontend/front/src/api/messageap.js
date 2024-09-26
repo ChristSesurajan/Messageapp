@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import { rid } from './searchus.js';
+import {recvvid} from './profile.js'
 import './searchus.css';
 
 function Message() {
@@ -9,7 +10,7 @@ function Message() {
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
-
+  rid=rid || recvvid
   const { username } = useContext(UserContext);
   useEffect(() => {
     if (senderId && rid) {
