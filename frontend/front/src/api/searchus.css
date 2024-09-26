@@ -62,7 +62,7 @@
 }
 
 .message.received {
-  float:right;
+  align-self: flex-start;
   background-color: #eaeaea;
 }
 @keyframes fadeIn {
