@@ -2,7 +2,7 @@
 .messaging-app-container {
   max-width: 600px;
   margin: auto;
-  padding: 20px;
+  padding: 30px;
 }
 
 .app-title {
@@ -49,8 +49,8 @@
 }
 
 .message {
-
-  padding: 10px 10px;
+  margin-bottom: 10px;
+  padding: 10px 20px;
   border-radius: 10px;
   max-width: 70%;
   animation: fadeIn 0.5s ease;
@@ -58,6 +58,7 @@
 
 .message.sent {
   background-color: #dcf8c6;
+  margin-bottom: 10px;
   align-self: flex-end;
 }
 
