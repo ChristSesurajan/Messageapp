@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useReducer } from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import { rid } from './searchus.js';
@@ -6,7 +6,9 @@ import {recvvid} from './profile.js'
 import './searchus.css';
 
 function Message() {
-  let [messages, setMessages] = useState([]);
+  let [messages, setMessages] = useReducer((state,action)=>{
+    return action
+  },[]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
@@ -20,9 +22,9 @@ function Message() {
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
           const data = await response.json();
-         console.log(data);
+         //console.log(data);
          setMessages(data.messages);
-          messages=data.messages;
+          //messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
@@ -45,9 +47,9 @@ function Message() {
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
           const data = await response.json();
-         console.log(data);
+         //console.log(data);
          setMessages(data.messages);
-          messages=data.messages;
+         // messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
