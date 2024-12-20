@@ -9,22 +9,24 @@ function Message() {
   let [messages, setMessages] = useReducer((state,action)=>{
     return action
   },[]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useReducer((state,action)=>{
+    return action
+  },'');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
-  rid=rid || recvvid
+  let riid=rid || recvvid
   const { username } = useContext(UserContext);
   useEffect(() => {
-    if (senderId && rid) {
+    if (senderId && riid) {
       const fetchMessages = async () => {
         try {
          // console.log(senderId);
           //console.log(rid);
-          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-         //console.log(data);
+        // console.log(data);
          setMessages(data.messages);
-          //messages=data.messages;
+          
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
@@ -32,7 +34,7 @@ function Message() {
       };
       fetchMessages();
     }
-  }, [senderId,rid]);
+  }, [senderId,riid]);
 
   useEffect(() => {
     if (username) {
@@ -40,16 +42,16 @@ function Message() {
     }
   }, [username]);
   useEffect(() => {
-    if (senderId && rid) {
+    if (senderId && riid) {
       const fetchMessages = async () => {
         try {
          // console.log(senderId);
           //console.log(rid);
-          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-         //console.log(data);
+        // console.log(data);
          setMessages(data.messages);
-         // messages=data.messages;
+          //messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
@@ -61,7 +63,7 @@ function Message() {
   }, [newMessage]);
 
   
-  /*const fetchMessages = async () => {
+  const fetchMessages = async () => {
     try {
      // console.log(senderId);
       //console.log(rid);
@@ -69,12 +71,12 @@ function Message() {
       const data = await response.json();
      console.log(data);
      setMessages(data.messages);
-      messages=data.messages;
+  
     } catch (error) {
      // console.error('Error fetching messages:', error);
       setError(error.message);
     }
-  };*/
+  };
   
   const fetchUserId = async () => {
     try {
@@ -106,12 +108,12 @@ function Message() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ sender_id: senderId, recipient_id: rid, message: newMessage }),
+        body: JSON.stringify({ sender_id: senderId, recipient_id: riid, message: newMessage }),
       });
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      //fetchMessages();
+      fetchMessages();
       setNewMessage('');
       
     } catch (error) {
@@ -145,12 +147,11 @@ function Message() {
         className="message-input"
         placeholder="Type a message..."
       />
-      <button onClick={sendMessage} className="send-button">
+      <button onClick={()=>{sendMessage();fetchMessages()}} className="send-button">
         Send
       </button>
     </div>
   </div>
   );
 }
-
 export default Message;
