@@ -5,16 +5,13 @@ import { rid } from './searchus.js';
 import {recvvid} from './profile.js'
 import './searchus.css';
 
-function reducer(state,action){
-  console.log(state);
-  return [...state,action.payload.newmsg];
-
-}
-
 function Message() {
-  let [messages, setMessages] =useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [updatemes, dispatch] = useReducer(reducer, messages);
+  let [messages, setMessages] = useReducer((state,action)=>{
+    return action
+  },[]);
+  const [newMessage, setNewMessage] = useReducer((state,action)=>{
+    return action
+  },'');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
   let riid=rid || recvvid
@@ -63,7 +60,7 @@ function Message() {
       fetchMessages();
     }
 
-  }, [updatemes]);
+  }, [newMessage]);
 
   
   const fetchMessages = async () => {
@@ -72,7 +69,7 @@ function Message() {
       //console.log(rid);
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
-     //console.log(data);
+     console.log(data);
      setMessages(data.messages);
   
     } catch (error) {
@@ -106,7 +103,6 @@ function Message() {
     }
 
     try {
-      console.log(updatemes)
       const response = await fetch(`${API_ENDPOINT}/messages`, {
         method: 'POST',
         headers: {
@@ -117,7 +113,7 @@ function Message() {
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      fetchMessages();
+      //fetchMessages();
       setNewMessage('');
       
     } catch (error) {
@@ -151,7 +147,7 @@ function Message() {
         className="message-input"
         placeholder="Type a message..."
       />
-      <button onClick={()=>{sendMessage();dispatch({payload:{newmsg:newMessage}})}} className="send-button">
+      <button onClick={()=>{sendMessage();fetchMessages()}} className="send-button">
         Send
       </button>
     </div>
