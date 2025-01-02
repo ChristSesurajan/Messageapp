@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useReducer } from 'react';
+import React, { useContext, useState, useEffect, useReducer , useRef} from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import { rid } from './searchus.js';
@@ -12,9 +12,9 @@ function reducer(state,action){
 }
 
 function Message() {
-  let [messages, setMessages] =useState([]);
+  let messages=useRef([]);
   const [newMessage, setNewMessage] = useState('');
-  const [updatemes, dispatch] = useReducer(reducer, [...messages]);
+  const [updatemes, dispatch] = useReducer(reducer, []);
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
   let riid=rid || recvvid
@@ -23,12 +23,13 @@ function Message() {
     if (senderId && riid) {
       const fetchMessages = async () => {
         try {
-         // console.log(senderId);
+          console.log(messages.current);
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-        // console.log(data);
-         setMessages(data.messages);
+        console.log(data);
+        console.log(messages.current);
+        messages.current=data.messages
           
         } catch (error) {
          // console.error('Error fetching messages:', error);
@@ -52,8 +53,8 @@ function Message() {
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-        // console.log(data);
-         setMessages(data.messages);
+        console.log(messages.current);
+        messages.current=data.messages
           //messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
@@ -63,7 +64,7 @@ function Message() {
       fetchMessages();
     }
 
-  }, [updatemes]);
+  }, );
 
   
   const fetchMessages = async () => {
@@ -74,7 +75,7 @@ function Message() {
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
      //console.log(data);
-     setMessages(data.messages);
+     messages.current=data.messages
   
     } catch (error) {
      // console.error('Error fetching messages:', error);
@@ -101,7 +102,7 @@ function Message() {
 
   const sendMessage = async (e) => {
     //  console.log(senderId)
-    e.preventDefault();
+ 
     if (!senderId || !newMessage) {
       setError('Sender ID and message are required');
       return;
@@ -136,14 +137,16 @@ function Message() {
    
     <div className="message-list">
       <ul>
-        {[...messages].map((message, index) => (
-          <li
+        {[messages.current].map((message, index) => (
+          
+           
+          <li 
             key={index}
             className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
           >
             {message.message}
           </li>
-        ))}
+       ))}
       </ul>
     </div>
     <div className="message-input-container">
