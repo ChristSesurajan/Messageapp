@@ -137,7 +137,7 @@ function Message() {
    
     <div className="message-list">
       <ul>
-        {[messages.current].map((message, index) => (
+        {messages.current.map((message, index) => (
           
            
           <li 
