@@ -5,16 +5,11 @@ import { rid } from './searchus.js';
 import {recvvid} from './profile.js'
 import './searchus.css';
 
-function reducer(state,action){
-  console.log(state);
-  return [...state,action.payload.newmsg];
 
-}
 
 function Message() {
   let messages=useRef([]);
   const [newMessage, setNewMessage] = useState('');
-  const [updatemes, dispatch] = useReducer(reducer, []);
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
   let riid=rid || recvvid
@@ -45,6 +40,26 @@ function Message() {
       fetchUserId();
     }
   }, [username]);
+  useEffect(() => {
+    if (senderId && riid) {
+      const fetchMessages = async () => {
+        try {
+         // console.log(senderId);
+          //console.log(rid);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
+          const data = await response.json();
+        console.log(messages.current);
+        messages.current=data.messages
+          //messages=data.messages;
+        } catch (error) {
+         // console.error('Error fetching messages:', error);
+          setError(error.message);
+        }
+      };
+      fetchMessages();
+    }
+
+  }, );
   useEffect(() => {
     if (senderId && riid) {
       const fetchMessages = async () => {
@@ -109,7 +124,7 @@ function Message() {
     }
 
     try {
-      console.log(updatemes)
+      //console.log(updatemes)
       const response = await fetch(`${API_ENDPOINT}/messages`, {
         method: 'POST',
         headers: {
@@ -121,7 +136,7 @@ function Message() {
         throw new Error('Failed to send message');
       }
       fetchMessages();
-      dispatch({payload:{newmsg:newMessage}})
+     
       setNewMessage('');
       
     } catch (error) {
@@ -129,6 +144,7 @@ function Message() {
       setError(error.message);
     }
   };
+
 
   return (
     <div className="messaging-app-container">
