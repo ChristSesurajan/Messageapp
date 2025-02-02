@@ -14,7 +14,7 @@ function reducer(state,action){
 function Message() {
   let [messages, setMessages] =useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [updatemes, dispatch] = useReducer(reducer, [...messages]);
+  const [updatemes, dispatch] = useReducer(reducer, messages);
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
   let riid=rid || recvvid
@@ -67,7 +67,6 @@ function Message() {
 
   
   const fetchMessages = async () => {
-  
     try {
      // console.log(senderId);
       //console.log(rid);
@@ -99,9 +98,8 @@ function Message() {
 
 
 
-  const sendMessage = async (e) => {
+  const sendMessage = async () => {
     //  console.log(senderId)
-    e.preventDefault();
     if (!senderId || !newMessage) {
       setError('Sender ID and message are required');
       return;
@@ -120,7 +118,6 @@ function Message() {
         throw new Error('Failed to send message');
       }
       fetchMessages();
-      dispatch({payload:{newmsg:newMessage}})
       setNewMessage('');
       
     } catch (error) {
@@ -154,7 +151,7 @@ function Message() {
         className="message-input"
         placeholder="Type a message..."
       />
-      <button onClick={sendMessage} className="send-button">
+      <button onClick={()=>{sendMessage();dispatch({payload:{newmsg:newMessage}})}} className="send-button">
         Send
       </button>
     </div>
