@@ -1,27 +1,31 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useReducer , useRef} from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import { rid } from './searchus.js';
+import {recvvid} from './profile.js'
 import './searchus.css';
 
+
+
 function Message() {
-  let [messages, setMessages] = useState([]);
+  let messages=useRef([]);
   const [newMessage, setNewMessage] = useState('');
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
-
+  let riid=rid || recvvid
   const { username } = useContext(UserContext);
   useEffect(() => {
-    if (senderId && rid) {
+    if (senderId && riid) {
       const fetchMessages = async () => {
         try {
-         // console.log(senderId);
+          console.log(messages.current);
           //console.log(rid);
-          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-         console.log(data);
-         setMessages(data.messages);
-          messages=data.messages;
+        console.log(data);
+        console.log(messages.current);
+        messages.current=data.messages
+          
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
@@ -29,7 +33,7 @@ function Message() {
       };
       fetchMessages();
     }
-  }, [senderId,rid]);
+  }, [senderId,riid]);
 
   useEffect(() => {
     if (username) {
@@ -37,16 +41,16 @@ function Message() {
     }
   }, [username]);
   useEffect(() => {
-    if (senderId && rid) {
+    if (senderId && riid) {
       const fetchMessages = async () => {
         try {
          // console.log(senderId);
           //console.log(rid);
-          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-         console.log(data);
-         setMessages(data.messages);
-          messages=data.messages;
+        console.log(messages.current);
+        messages.current=data.messages
+          //messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
           setError(error.message);
@@ -55,23 +59,44 @@ function Message() {
       fetchMessages();
     }
 
-  }, [newMessage]);
+  }, );
+  useEffect(() => {
+    if (senderId && riid) {
+      const fetchMessages = async () => {
+        try {
+         // console.log(senderId);
+          //console.log(rid);
+          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
+          const data = await response.json();
+        console.log(messages.current);
+        messages.current=data.messages
+          //messages=data.messages;
+        } catch (error) {
+         // console.error('Error fetching messages:', error);
+          setError(error.message);
+        }
+      };
+      fetchMessages();
+    }
+
+  }, );
 
   
-  /*const fetchMessages = async () => {
+  const fetchMessages = async () => {
+  
     try {
      // console.log(senderId);
       //console.log(rid);
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
-     console.log(data);
-     setMessages(data.messages);
-      messages=data.messages;
+     //console.log(data);
+     messages.current=data.messages
+  
     } catch (error) {
      // console.error('Error fetching messages:', error);
       setError(error.message);
     }
-  };*/
+  };
   
   const fetchUserId = async () => {
     try {
@@ -90,25 +115,28 @@ function Message() {
 
 
 
-  const sendMessage = async () => {
+  const sendMessage = async (e) => {
     //  console.log(senderId)
+ 
     if (!senderId || !newMessage) {
       setError('Sender ID and message are required');
       return;
     }
 
     try {
+      //console.log(updatemes)
       const response = await fetch(`${API_ENDPOINT}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ sender_id: senderId, recipient_id: rid, message: newMessage }),
+        body: JSON.stringify({ sender_id: senderId, recipient_id: riid, message: newMessage }),
       });
       if (!response.ok) {
         throw new Error('Failed to send message');
       }
-      //fetchMessages();
+      fetchMessages();
+     
       setNewMessage('');
       
     } catch (error) {
@@ -117,36 +145,39 @@ function Message() {
     }
   };
 
+
   return (
     <div className="messaging-app-container">
-      <h1 className="app-title">Messaging App</h1>
-      {error && <div className="error">{error}</div>}
-      <div className="message-input-container">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className="message-input"
-          placeholder="Type a message..."
-        />
-        <button onClick={sendMessage} className="send-button">
-          Send
-        </button>
-      </div>
-      <div className="message-list">
-        <ul>
-          {[...messages].reverse().map((message, index) => (
-            <li
-              key={index}
-              className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
-            >
-              {message.message}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <h1 className="app-title">Messaging App</h1>
+    {error && <div className="error">{error}</div>}
+   
+    <div className="message-list">
+      <ul>
+        {messages.current.map((message, index) => (
+          
+           
+          <li 
+            key={index}
+            className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
+          >
+            {message.message}
+          </li>
+       ))}
+      </ul>
     </div>
+    <div className="message-input-container">
+      <input
+        type="text"
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        className="message-input"
+        placeholder="Type a message..."
+      />
+      <button onClick={sendMessage} className="send-button">
+        Send
+      </button>
+    </div>
+  </div>
   );
 }
-
 export default Message;
