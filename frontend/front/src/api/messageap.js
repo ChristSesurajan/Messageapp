@@ -1,15 +1,20 @@
-import React, { useContext, useState, useEffect, useReducer , useRef} from 'react';
+import React, { useContext, useState, useEffect, useReducer } from 'react';
 import API_ENDPOINT from './../api/index.js';
 import { UserContext } from './../context/UserContext';
 import { rid } from './searchus.js';
 import {recvvid} from './profile.js'
 import './searchus.css';
 
+function reducer(state,action){
+  console.log(state);
+  return [...state,action.payload.newmsg];
 
+}
 
 function Message() {
-  let messages=useRef([]);
+  let [messages, setMessages] =useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [updatemes, dispatch] = useReducer(reducer, [...messages]);
   const [error, setError] = useState('');
   let [senderId, setSenderId] = useState(); // Initialize as null
   let riid=rid || recvvid
@@ -18,13 +23,12 @@ function Message() {
     if (senderId && riid) {
       const fetchMessages = async () => {
         try {
-          console.log(messages.current);
+         // console.log(senderId);
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-        console.log(data);
-        console.log(messages.current);
-        messages.current=data.messages
+        // console.log(data);
+         setMessages(data.messages);
           
         } catch (error) {
          // console.error('Error fetching messages:', error);
@@ -48,8 +52,8 @@ function Message() {
           //console.log(rid);
           const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
           const data = await response.json();
-        console.log(messages.current);
-        messages.current=data.messages
+        // console.log(data);
+         setMessages(data.messages);
           //messages=data.messages;
         } catch (error) {
          // console.error('Error fetching messages:', error);
@@ -59,27 +63,7 @@ function Message() {
       fetchMessages();
     }
 
-  }, );
-  useEffect(() => {
-    if (senderId && riid) {
-      const fetchMessages = async () => {
-        try {
-         // console.log(senderId);
-          //console.log(rid);
-          const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${riid}`);
-          const data = await response.json();
-        console.log(messages.current);
-        messages.current=data.messages
-          //messages=data.messages;
-        } catch (error) {
-         // console.error('Error fetching messages:', error);
-          setError(error.message);
-        }
-      };
-      fetchMessages();
-    }
-
-  }, );
+  }, [updatemes]);
 
   
   const fetchMessages = async () => {
@@ -90,7 +74,7 @@ function Message() {
       const response = await fetch(`${API_ENDPOINT}/messages?sender_id=${senderId}&recipient_id=${rid}`);
       const data = await response.json();
      //console.log(data);
-     messages.current=data.messages
+     setMessages(data.messages);
   
     } catch (error) {
      // console.error('Error fetching messages:', error);
@@ -117,14 +101,14 @@ function Message() {
 
   const sendMessage = async (e) => {
     //  console.log(senderId)
- 
+  
     if (!senderId || !newMessage) {
       setError('Sender ID and message are required');
       return;
     }
 
     try {
-      //console.log(updatemes)
+      console.log(updatemes)
       const response = await fetch(`${API_ENDPOINT}/messages`, {
         method: 'POST',
         headers: {
@@ -136,7 +120,7 @@ function Message() {
         throw new Error('Failed to send message');
       }
       fetchMessages();
-     
+      dispatch({payload:{newmsg:newMessage}})
       setNewMessage('');
       
     } catch (error) {
@@ -145,7 +129,6 @@ function Message() {
     }
   };
 
-
   return (
     <div className="messaging-app-container">
     <h1 className="app-title">Messaging App</h1>
@@ -153,16 +136,14 @@ function Message() {
    
     <div className="message-list">
       <ul>
-        {messages.current.map((message, index) => (
-          
-           
-          <li 
+        {messages.map((message, index) => (
+          <li
             key={index}
             className={`message ${message.sender_id === senderId ? 'sent' : 'received'}`}
           >
             {message.message}
           </li>
-       ))}
+        ))}
       </ul>
     </div>
     <div className="message-input-container">
